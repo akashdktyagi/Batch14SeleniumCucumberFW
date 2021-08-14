@@ -1,18 +1,16 @@
 package stepdefs;
 
-import io.cucumber.java.After;
-import io.cucumber.java.Before;
-import io.cucumber.java.Scenario;
+import io.cucumber.java.*;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.Select;
 import org.testng.Assert;
 
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 public class StepDefs {
@@ -26,11 +24,31 @@ public class StepDefs {
     @Before  // native dependency Injection in cucumber
     public void setUp(Scenario scenario){
         this.scenario = scenario;
+        scenario.log("executed before step");
     }
 
     @After
-    public void cleanUp(){
-        driver.quit();
+    public void cleanUp(Scenario scenario){
+        if (!(driver==null)) {
+            driver.quit();
+        }
+        scenario.log("executed after step");
+    }
+
+    @BeforeStep
+    public void beforeEachStep(){
+        scenario.log("executed before each Step");
+    }
+
+    @AfterStep
+    public void afterEachStep(){
+//        if (scenario.isFailed()) {
+        if (!(driver==null)) {
+            TakesScreenshot scrnShot = (TakesScreenshot) driver;
+            byte[] data = scrnShot.getScreenshotAs(OutputType.BYTES);
+            scenario.attach(data, "image/png", "Failed Step Name: " + scenario.getName());
+        }
+
     }
 
     @Given("User opened the browser")
@@ -56,6 +74,13 @@ public class StepDefs {
     public void user_enter_username_as_and_password_as_and_click_on_login_button(String userName, String password) {
         driver.findElement(By.name("username")).sendKeys(userName);
         driver.findElement(By.name("password")).sendKeys(password);
+        driver.findElement(By.xpath("//input[@value='Log In']")).click();
+    }
+
+    @When("User enter username and password as in below table and click on login button")
+    public void user_enter_username_and_password_as_in_below_table_and_click_on_login_button(Map<String,String> userCred) {
+        driver.findElement(By.name("username")).sendKeys(userCred.get("username"));
+        driver.findElement(By.name("password")).sendKeys(userCred.get("password"));
         driver.findElement(By.xpath("//input[@value='Log In']")).click();
     }
 
@@ -117,6 +142,59 @@ public class StepDefs {
 
     }
 
+
+    //Temp Steps
+    @Given("I want to do smthing")
+    public void i_want_to_do_smthing() {
+
+    }
+    @When("I have a argument to send as {string}")
+    public void i_have_a_argument_to_send_as(String arg) {
+        System.out.println("Printing the Argument: " + arg);
+    }
+    @Then("something should happen")
+    public void something_should_happen() {
+
+    }
+
+    @When("I have a list of items to send")
+    public void i_have_a_list_of_items_to_send(List<String> list) {
+        // Write code here that turns the phrase above into concrete actions
+        // For automatic transformation, change DataTable to one of
+        // E, List<E>, List<List<E>>, List<Map<K,V>>, Map<K,V> or
+        // Map<K, List<V>>. E,K,V must be a String, Integer, Float,
+        // Double, Byte, Short, Long, BigInteger or BigDecimal.
+        //
+        // For other transformations you can register a DataTableType.
+        System.out.println(list.toString());
+    }
+
+    @When("I have students and their marks")
+    public void i_have_students_and_their_marks(Map<String, String> map) {
+        // Write code here that turns the phrase above into concrete actions
+        // For automatic transformation, change DataTable to one of
+        // E, List<E>, List<List<E>>, List<Map<K,V>>, Map<K,V> or
+        // Map<K, List<V>>. E,K,V must be a String, Integer, Float,
+        // Double, Byte, Short, Long, BigInteger or BigDecimal.
+        //
+        // For other transformations you can register a DataTableType.
+        System.out.println(map);
+    }
+
+    //Exmplaes steps:
+
+    @Given("I am on the search page")
+    public void i_am_on_the_search_page() {
+
+    }
+    @When("I search for a product as {string}")
+    public void i_search_for_a_product_as(String string) {
+        System.out.println("Product searched: " + string);
+    }
+    @Then("result should be displayed related to {string}")
+    public void result_should_be_displayed_related_to(String string) {
+        System.out.println("Product search sucess: " + string);
+    }
 }
 
 
