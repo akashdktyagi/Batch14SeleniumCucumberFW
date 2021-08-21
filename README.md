@@ -4,15 +4,18 @@ Batch14SeleniumCucumberFW
 
 Datatable - Discussed
 Examples - Discussed
-
 Cucumber Hooks-BeforeLine and AfterLine Discussed
 Screen Shot Capturing-Discussed
 Extent Report-Discussed
 
 Logging
-Lombok
+Lombok - Usefull for eleminating Boiler Plate code= getter and setters, log statement, Builders
 Parallel Exec
-Config
-Maven Execution using sure fire
+Cross Browser execution,
+WebDriver factory
 
 Dependecy Injection
+Maven Execution using sure fire
+
+
+Config

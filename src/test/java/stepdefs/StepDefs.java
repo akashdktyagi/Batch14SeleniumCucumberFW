@@ -4,15 +4,20 @@ import io.cucumber.java.*;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+import lombok.extern.log4j.Log4j2;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.core.Logger;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.Select;
 import org.testng.Assert;
+import utils.DriverFactory;
 
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+@Log4j2
 public class StepDefs {
 
     WebDriver driver;
@@ -24,7 +29,6 @@ public class StepDefs {
     @Before  // native dependency Injection in cucumber
     public void setUp(Scenario scenario){
         this.scenario = scenario;
-        scenario.log("executed before step");
     }
 
     @After
@@ -32,12 +36,11 @@ public class StepDefs {
         if (!(driver==null)) {
             driver.quit();
         }
-        scenario.log("executed after step");
     }
 
     @BeforeStep
     public void beforeEachStep(){
-        scenario.log("executed before each Step");
+
     }
 
     @AfterStep
@@ -46,35 +49,46 @@ public class StepDefs {
         if (!(driver==null)) {
             TakesScreenshot scrnShot = (TakesScreenshot) driver;
             byte[] data = scrnShot.getScreenshotAs(OutputType.BYTES);
-            scenario.attach(data, "image/png", "Failed Step Name: " + scenario.getName());
+            scenario.attach(data, "image/png", "Step Name: " + scenario.getName());
         }
+        log.debug("Each step hook is executed, screen shot taken");
 
     }
 
     @Given("User opened the browser")
     public void user_opened_the_browser() {
+        String browserName = System.getProperty("browser");
+        driver = DriverFactory.createInstance(browserName);
         driver = new ChromeDriver();
+        log.debug("Chrime Intialized");
         driver.manage().window().maximize(); // maximize browser window
+        log.debug("Browser Maximized");
         driver.manage().deleteAllCookies(); // delete all cookies
         driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+        log.debug("Each step hook is executed, screen shot taken");
     }
 
     @Given("User clicked on link {string}")
     public void user_clicked_on_link(String linkName) {
         driver.findElement(By.linkText(linkName)).click();
+        log.debug("Link Clicked. Link Name" + linkName);
     }
 
 
     @Given("User navigated to the application url")
     public void user_navigated_to_the_application_url() {
         driver.get(url);
+        log.debug("URL navigated: " + url);
     }
 
     @When("User enter username as {string} and password as {string} and click on login button")
     public void user_enter_username_as_and_password_as_and_click_on_login_button(String userName, String password) {
         driver.findElement(By.name("username")).sendKeys(userName);
+        log.debug("Username enterd: " + userName);
         driver.findElement(By.name("password")).sendKeys(password);
+        log.debug("password enterd: " + password);
         driver.findElement(By.xpath("//input[@value='Log In']")).click();
+        log.debug("Login button Click");
     }
 
     @When("User enter username and password as in below table and click on login button")
@@ -166,7 +180,7 @@ public class StepDefs {
         // Double, Byte, Short, Long, BigInteger or BigDecimal.
         //
         // For other transformations you can register a DataTableType.
-        System.out.println(list.toString());
+        System.out.println("Akash: " + list.toString());
     }
 
     @When("I have students and their marks")

@@ -13,12 +13,14 @@ Feature: Temp
       | shraddha     | 45    |
       | chetna       | 56    |
       | romali       | 67    |
-    Then something should happen
+    Then something should happenz
 
     @Example
     Scenario Outline: I want to search for the product
       Given I am on the search page
       When I search for a product as "<product>"
+      When I have a list of items to send
+        | <product>    |
       Then result should be displayed related to "<product>"
 
       Examples:
