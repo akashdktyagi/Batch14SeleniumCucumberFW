@@ -13,7 +13,7 @@ Feature: Temp
       | shraddha     | 45    |
       | chetna       | 56    |
       | romali       | 67    |
-    Then something should happenz
+    Then something should happen
 
     @Example
     Scenario Outline: I want to search for the product

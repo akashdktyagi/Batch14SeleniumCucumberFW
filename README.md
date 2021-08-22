@@ -13,9 +13,8 @@ Lombok - Usefull for eleminating Boiler Plate code= getter and setters, log stat
 Parallel Exec
 Cross Browser execution,
 WebDriver factory
+maven command line argument
 
 Dependecy Injection
 Maven Execution using sure fire
-
-
 Config
